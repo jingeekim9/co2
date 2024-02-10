@@ -46,9 +46,55 @@ export default function Main(props) {
                 </View>
                 <View
                     style={{
-                        marginTop: hp(5)
+                        marginTop: hp(5),
+                        alignItems: 'center'
                     }}
                 >
+                    <TouchableOpacity
+                        style={{
+                            width: wp(90),
+                            backgroundColor: '#7493b3',
+                            padding: hp(2),
+                            borderRadius: hp(1)
+                        }}
+                        onPress={() => {
+                            props.navigation.navigate("Home")
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                fontSize: hp(5)
+                            }}
+                        >
+                            Chadwick
+                        </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                        style={{
+                            width: wp(90),
+                            backgroundColor: '#C6DCBA',
+                            padding: hp(2),
+                            borderRadius: hp(1),
+                            marginTop: hp(2)
+                        }}
+                        onPress={() => {
+                            props.navigation.navigate("HomeOther")
+                        }}
+                    >
+                        <Text
+                            style={{
+                                color: 'white',
+                                fontWeight: 'bold',
+                                textAlign: 'center',
+                                fontSize: hp(5)
+                            }}
+                        >
+                            Other
+                        </Text>
+                    </TouchableOpacity>
                 </View>
                    
             </View>

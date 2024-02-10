@@ -28,7 +28,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-export default function Home(props) {
+export default function HomeOther(props) {
     const [date, setDate] = useState(moment().utc(true));
     const [rooms, setRooms] = useState([]);
     const [outsideData, setOutsideData] = useState({});
@@ -55,7 +55,7 @@ export default function Home(props) {
                 }
                 else
                 {
-                    if(tempDict['location'] == "Chadwick")
+                    if(tempDict['location'] == "Other")
                     {
                         tempDict['name'] = doc.id;
                         tempArray.push(tempDict);
@@ -81,7 +81,7 @@ export default function Home(props) {
             }
             else
             {
-                if(tempDict['location'] == 'Chadwick')
+                if(tempDict['location'] == 'Other')
                 {
                     tempDict['name'] = doc.id;
                     tempArray.push(tempDict);

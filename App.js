@@ -10,6 +10,8 @@ import { createStackNavigator } from "@react-navigation/stack";
 import { Image } from 'react-native'
 import Home from "./pages/Home";
 import Detail from "./pages/Detail";
+import HomeOther from "./pages/HomeOther";
+import DetailOther from "./pages/DetailOther";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
 import Main from "./pages/Main";
@@ -44,7 +46,7 @@ export default function App() {
             component={Home}
             options={{
               title: 'HOME',
-              headerTitleAlign: 'left',
+              headerTitleAlign: 'center',
               headerStyle: {
                 backgroundColor: '#516372'
               },
@@ -75,6 +77,56 @@ export default function App() {
           <Stack.Screen 
             name="Detail"
             component={Detail}
+            options={{
+              title: 'Detail',
+              headerTitleAlign: 'center',
+              headerStyle: {
+                backgroundColor: '#516372'
+              },
+              headerTitleStyle: {
+                color: 'white',
+                letterSpacing: 2
+              },
+              headerShadowVisible: false,
+              headerTintColor: 'white'
+            }}
+          />
+          <Stack.Screen 
+            name="HomeOther"
+            component={HomeOther}
+            options={{
+              title: 'HOME',
+              headerTitleAlign: 'center',
+              headerStyle: {
+                backgroundColor: '#516372'
+              },
+              headerTitleStyle: {
+                color: 'white',
+                letterSpacing: 2
+              },
+              headerShadowVisible: false,
+              headerRight: () => (
+                <Icon 
+                  type="ionicon"
+                  name="log-out-outline"
+                  color="white"
+                  style={{
+                    marginRight: wp(5)
+                  }}
+                  onPress={async(props) => {
+                    await AsyncStorage.removeItem('email')
+                    await AsyncStorage.removeItem('password')
+                    navigationRef.current.reset({
+                      routes: [{name: 'Login'}]
+                  })
+                  }}
+                />
+              )
+            }}
+          />
+          <Stack.Screen 
+            name="DetailOther"
+            component={DetailOther}
             options={{
               title: 'Detail',
               headerTitleAlign: 'center',
