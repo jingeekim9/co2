@@ -17,6 +17,8 @@ import Toast from "react-native-toast-message";
 import { Icon } from '@rneui/themed';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const Tab = createBottomTabNavigator();
 
 const Stack = createStackNavigator();
@@ -65,7 +67,9 @@ export default function App() {
                   style={{
                     marginRight: wp(5)
                   }}
-                  onPress={(props) => {
+                  onPress={async(props) => {
+                    await AsyncStorage.removeItem('email')
+                    await AsyncStorage.removeItem('password')
                     navigationRef.current.reset({
                       routes: [{name: 'Login'}]
                   })

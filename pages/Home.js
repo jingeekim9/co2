@@ -6,6 +6,8 @@ import moment from "moment/moment";
 import { Icon } from "@rneui/themed";
 import { initializeApp } from "firebase/app";
 import { getFirestore, query, collection, getDocs, orderBy, limit } from "firebase/firestore";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -63,6 +65,26 @@ export default function Home(props) {
         callFirebase();
     }, [])
 
+    const refresh = async() => {
+        const q = query(collection(db, "AirQuality"));
+
+        const querySnapshot = await getDocs(q);
+        var tempArray = []
+        querySnapshot.forEach((doc) => {
+            if(doc.id == "Outside")
+            {
+                setOutsideData(doc.data());
+            }
+            else
+            {
+                var tempDict = doc.data();
+                tempDict['name'] = doc.id;
+                tempArray.push(tempDict);
+            }
+        });
+        setRooms(tempArray);
+    }
+
     return (
         <View style={styles.container}>
             <LinearGradient
@@ -96,7 +118,13 @@ export default function Home(props) {
                         </View>
                     </View>
                 </View>
-                <View>
+                <View
+                    style={{
+                        flexDirection: 'row',
+                        justifyContent: 'space-between',
+                        alignItems: 'center'
+                    }}
+                >
                     <Text
                         style={{
                             fontSize: 15,
@@ -107,6 +135,18 @@ export default function Home(props) {
                     >
                         ROOMS
                     </Text>
+                    <Icon
+                            name='refresh-outline'
+                            type='ionicon'
+                            color='#fff'
+                            size={hp(3)}
+                            style={{
+                                marginRight: hp(2)
+                            }}
+                            onPress={() => {
+                                refresh();
+                            }}
+                        />
                 </View>
                 <ScrollView>
                 {
@@ -129,7 +169,7 @@ export default function Home(props) {
                                         size={hp(4)}
                                     />
                                 </View>
-                                <View style={{flexDirection: 'column'}}>
+                                <View style={{flexDirection: 'column', width: '50%'}}>
                                     <Text style={styles.roomtitle}>
                                         {el.name}
                                     </Text>

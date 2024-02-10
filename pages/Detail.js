@@ -7,6 +7,7 @@ import { Icon } from "@rneui/themed";
 import { ProgressCircle } from "react-native-svg-charts";
 import { Text as SVGText, Defs, LinearGradient as SVGLinearGradient, Stop } from "react-native-svg";
 import { SlideBarChart, SlideAreaChart, GradientProps } from "@connectedcars/react-native-slide-charts";
+import { LineChart } from "react-native-chart-kit";
 import { Button } from "@rneui/base";
 import { initializeApp } from "firebase/app";
 import { getFirestore, doc, getDoc, collection, limit, orderBy, where, getDocs, query } from "firebase/firestore";
@@ -44,7 +45,12 @@ export default function Detail(props) {
     const getHour = (minus = 0) => {
         var today = new Date();
         today.setHours(today.getHours() - minus);
-        return today.getHours();
+        var hour = today.getHours();
+        var ampm = hour >= 12 ? 'pm' : 'am'
+        hour = hour % 12
+        hour = hour ? hour : 12
+        var strtime = hour + ' ' + ampm;
+        return strtime
     }
 
     const refresh = async () => {
@@ -52,7 +58,11 @@ export default function Detail(props) {
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
             var data = docSnap.data();
-            data['name'] = docSnap.id
+            data['name'] = docSnap.id;
+            data['co2_arr'] = data['co2_arr'].map(value => isNaN(value) ? 0 : value);
+            data['pm10_arr'] = data['pm10_arr'].map(value => isNaN(value) ? 0 : value);
+            data['pm25_arr'] = data['pm25_arr'].map(value => isNaN(value) ? 0 : value);
+            console.log(data)
             setCurInfo(data);
         } else {
             // docSnap.data() will be undefined in this case
@@ -80,6 +90,8 @@ export default function Detail(props) {
                 var data2 = docSnap2.data();
                 outsideArray.push(data2);
             }
+            console.log(tempArray)
+            console.log(outsideArray)
 
             if(tempArray.length > 0 && outsideArray.length > 0)
             {
@@ -551,34 +563,49 @@ export default function Detail(props) {
 
                         </TouchableOpacity>
                     </View>
-                    <SlideAreaChart
-                        data={data}
+                    <LineChart
+                        data={{
+                        labels: data.map((el) => { return el.week }),
+                        datasets: [
+                            {
+                            data: data.map((el) => { return el. y })
+                            }
+                        ]
+                        }}
+                        width={wp(100)} // from react-native
+                        height={220}
+                        yAxisInterval={1} // optional, defaults to 1
+                        chartConfig={{
+                        backgroundColor: "#637687",
+                        backgroundGradientFrom: "#637687",
+                        backgroundGradientTo: "#637687",
+                        decimalPlaces: 0,
+                        color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
+                        style: {
+                            borderRadius: 16,
+                            marginBottom: hp(10)
+                        },
+                        propsForDots: {
+                            r: "6",
+                            strokeWidth: "2",   
+                            stroke: "#637687"
+                        }
+                        }}
+                        bezier
                         style={{
-                            backgroundColor: 'transparent',
-                            marginBottom: hp(5)
+                            marginVertical: 8,
+                            borderRadius: 16
                         }}
-                        chartLineColor="white"
-                        chartLineWidth={1}
-                        yAxisProps={{
-                            verticalLineWidth: 0,
-                            horizontalLineWidth: 0
-                        }}
-                        xAxisProps={{
-                            axisMarkerLabels: data.map(item => item.week),
-                            adjustForSpecialMarkers: true,
-                            axisLabelStyle: { color: 'white', fontSize: hp(1.5) },
-                        }}
-                        paddingLeft={wp(5)}
-                        paddingRight={wp(5)}
-                        axisHeight={20}
-                        cursorProps={{
-                            cursorColor: 'white'
-                        }}
-                        height={180}
-                        alwaysShowIndicator={false}
-                        renderFillGradient={defaultAreaChartFillGradient}
                     />
+                    <View
+                        style={{
+                            height: hp(10),
+                            width: wp(100)
+                        }}
+                    >
 
+                    </View>
                 </ScrollView>
 
             </LinearGradient>

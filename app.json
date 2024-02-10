@@ -2,7 +2,7 @@
   "expo": {
     "name": "EnviroSense",
     "slug": "co2",
-    "version": "1.0.2",
+    "version": "1.0.5",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -19,20 +19,15 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "buildNumber": "1",
+      "buildNumber": "4",
       "bundleIdentifier": "com.s4kim2025.co2"
     },
     "android": {
-      "versionCode": 3,
+      "versionCode": 5,
       "package": "com.s4kim2025.co2"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    },
-    "extra": {
-      "eas": {
-        "projectId": "284a9ea6-e97b-4300-9ff2-4a7349017927"
-      }
     }
   }
 }

@@ -1,4 +1,4 @@
-import {React, useState} from 'react';
+import React, { useState, useEffect} from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import {widthPercentageToDP as wp, heightPercentageToDP as hp} from 'react-native-responsive-screen';
 import { Input } from '@rneui/themed';
@@ -6,6 +6,9 @@ import { Toast } from 'react-native-toast-message/lib/src/Toast';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -37,6 +40,46 @@ export default function Login(props) {
     const [errorPassword, setErrorPassword] = useState("");
     const [loading, setLoading ] = useState(false);
 
+    useEffect(() => {
+        const getLoginInfo = async() => {
+            const asyncEmail = await AsyncStorage.getItem('email');
+            const asyncPassword = await AsyncStorage.getItem('password');
+            if(asyncEmail != null) {
+                try {
+                    setLoading(true);
+                    const res = await signInWithEmailAndPassword(auth, asyncEmail, asyncPassword);
+                    setLoading(false);
+                    props.navigation.reset({
+                        routes: [{name: 'Home'}]
+                    })
+                }
+                catch (err) {
+                    console.error(err.code);
+                    if(err.code == 'auth/invalid-email'){
+                        Toast.show({
+                            type: 'error',
+                            text1: 'Please input a valid email.'
+                        })
+                    }
+                    else if(err.code == 'auth/wrong-password') {
+                        Toast.show({
+                            type: 'error', 
+                            text1: 'Wrong password.'
+                        })
+                    }
+                    else if(err.code == 'auth/user-not-found') {
+                        Toast.show({
+                            type: 'error',
+                            text1: 'No account with this email.'
+                        })
+                    }
+                    setLoading(false);
+                }
+            }
+        }
+        getLoginInfo();
+    }, [])
+
     
     const logInWithEmailAndPassword = async() => {
         setErrorEmail("");
@@ -58,6 +101,8 @@ export default function Login(props) {
             setLoading(true);
             const res = await signInWithEmailAndPassword(auth, email, password);
             setLoading(false);
+            await AsyncStorage.setItem('email', email);
+            await AsyncStorage.setItem('password', password);
             props.navigation.reset({
                 routes: [{name: 'Home'}]
             })
@@ -88,7 +133,7 @@ export default function Login(props) {
         }
     }
     return (
-        <View style={styles.container}>
+        <KeyboardAwareScrollView style={styles.container}>
             <View style={styles.upperContainer}>
                 <Image
                 source={require('../assets/logo.png')}
@@ -208,7 +253,7 @@ export default function Login(props) {
                     </Text>
                 </View>
             </View>
-        </View>
+        </KeyboardAwareScrollView>
 
     )
 }

@@ -111,8 +111,8 @@ export default function SignUp(props) {
                 <Image
                 source={require('../assets/logo.png')}
                 style={{
-                    width: hp(15),
-                    height: hp(15)
+                    width: hp(30),
+                    height: hp(30)
                 }}
                 resizeMode={'contain'}
                 >
