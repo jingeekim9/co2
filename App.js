@@ -12,6 +12,7 @@ import Home from "./pages/Home";
 import Detail from "./pages/Detail";
 import Login from "./pages/Login";
 import SignUp from "./pages/SignUp";
+import Main from "./pages/Main";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import Toast from "react-native-toast-message";
 import { Icon } from '@rneui/themed';
@@ -30,17 +31,10 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer ref={navigationRef}>
-        <Stack.Navigator initialRouteName="Login">
+        <Stack.Navigator initialRouteName="Main">
           <Stack.Screen 
-            name="Login"
-            component={Login}
-            options={{
-              headerShown: false
-            }}
-          />
-          <Stack.Screen 
-            name="SignUp"
-            component={SignUp}
+            name="Main"
+            component={Main}
             options={{
               headerShown: false
             }}
